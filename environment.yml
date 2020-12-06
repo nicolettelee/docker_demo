@@ -1,0 +1,9 @@
+name: align
+
+channels:
+  - bioconda
+
+dependencies:
+  - python=3.7
+  - bwa
+  - samtools
