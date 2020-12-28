@@ -28,12 +28,42 @@ def main():
 
     # convert
 
+    print("Converting sam to bam...")
+
+    output_a_bam = f'{tmp_dir}/aln_A.bam'
+    cmd = f'samtools view -b {output_a} -o {output_a_bam}'
+
+    os.system(cmd)
+    print("Conversion finished.")
+
     # sort
+
+    print("Sorting bam file...")
+
+    sorted_a_bam = f'{tmp_dir}/aln_A.sorted.bam'
+    cmd = f'samtools sort -o {sorted_a_bam} {output_a_bam}'
+
+    os.system(cmd)
+
+    print("Sorting finished.")
 
     # index
 
+    print("Indexing bam...")
+    cmd = f'samtools index {sorted_a_bam}'
+
+    os.system(cmd)
+
+    print("Indexing finished.")
+
     # report
 
+    print("Number of reads mapped to genome: ")
+
+    cmd = f'samtools view -c {sorted_a_bam}'
+
+    # cleanup, finish
+    print("Pipeline finished!")
 
 if __name__ == "__main__":
     main()
