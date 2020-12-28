@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import subprocess
 from align_genome.scripts import classes, config, say_hello
 
 def main():
@@ -61,6 +62,9 @@ def main():
     print("Number of reads mapped to genome: ")
 
     cmd = f'samtools view -c {sorted_a_bam}'
+
+    result = subprocess.check_output(cmd, shell=True)
+    print(result.decode("utf-8"))
 
     # cleanup, finish
     print("Pipeline finished!")
