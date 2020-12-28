@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 
 import os
-import subprocess
-from align_genome.scripts import classes, config, say_hello
+from align_genome.scripts import alignment_functions
 
 def main():
 
@@ -18,53 +17,36 @@ def main():
     genome_file = f'{real_path}/resources/genome/genome.fa'
     fastq_a = f'{real_path}/resources/fastqs/samples/A.fastq'
     output_a = f'{tmp_dir}/aln_A.sam'
-
-    cmd = f'bwa mem {genome_file} {fastq_a} > {output_a}'
+    output_a_bam = f'{tmp_dir}/aln_A.bam'
+    sorted_a_bam = f'{tmp_dir}/aln_A.sorted.bam'
 
     # align
-
     print("Now performing alignment...")
-    os.system(cmd)
+    alignment_functions.bwa_align(genome_file, fastq_a, output_a)
     print("Alignment finished.")
 
     # convert
 
     print("Converting sam to bam...")
-
-    output_a_bam = f'{tmp_dir}/aln_A.bam'
-    cmd = f'samtools view -b {output_a} -o {output_a_bam}'
-
-    os.system(cmd)
+    alignment_functions.convert_sam_bam(output_a, output_a_bam)
     print("Conversion finished.")
 
     # sort
 
     print("Sorting bam file...")
-
-    sorted_a_bam = f'{tmp_dir}/aln_A.sorted.bam'
-    cmd = f'samtools sort -o {sorted_a_bam} {output_a_bam}'
-
-    os.system(cmd)
-
+    alignment_functions.sort_bam(output_a_bam, sorted_a_bam)
     print("Sorting finished.")
 
     # index
 
     print("Indexing bam...")
-    cmd = f'samtools index {sorted_a_bam}'
-
-    os.system(cmd)
-
+    alignment_functions.index_bam(sorted_a_bam)
     print("Indexing finished.")
 
     # report
 
-    print("Number of reads mapped to genome: ")
-
-    cmd = f'samtools view -c {sorted_a_bam}'
-
-    result = subprocess.check_output(cmd, shell=True)
-    print(result.decode("utf-8"))
+    result = alignment_functions.report_reads(sorted_a_bam)
+    print(f'Number of reads mapped to genome: {result}')
 
     # cleanup, finish
     print("Pipeline finished!")
