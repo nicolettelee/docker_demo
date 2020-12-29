@@ -37,7 +37,7 @@ def sort_bam(infile, sorted_outfile):
     :param sorted_outfile: Sorted output (BAM format)
     """
 
-    cmd = f'samtools sort -o {infile} {sorted_outfile}'
+    cmd = f'samtools sort -o {sorted_outfile} {infile}'
     os.system(cmd)
 
 def index_bam(sorted_infile):
