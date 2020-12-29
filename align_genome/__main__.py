@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import os
-from align_genome.scripts import alignment_functions
+from align_genome.scripts import alignment_functions, cleanup_functions
 
 def main():
 
@@ -26,29 +26,26 @@ def main():
     print("Alignment finished.")
 
     # convert
-
     print("Converting sam to bam...")
     alignment_functions.convert_sam_bam(output_a, output_a_bam)
     print("Conversion finished.")
 
     # sort
-
     print("Sorting bam file...")
     alignment_functions.sort_bam(output_a_bam, sorted_a_bam)
     print("Sorting finished.")
 
     # index
-
     print("Indexing bam...")
     alignment_functions.index_bam(sorted_a_bam)
     print("Indexing finished.")
 
     # report
-
     result = alignment_functions.report_reads(sorted_a_bam)
     print(f'Number of reads mapped to genome: {result}')
 
     # cleanup, finish
+    cleanup_functions.clear_dir(tmp_dir)
     print("Pipeline finished!")
 
 if __name__ == "__main__":
